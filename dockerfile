@@ -1,11 +1,20 @@
-# Use official Nginx image
-FROM nginx:alpine
+# Base image (lightweight & fast)
+FROM python:3.11-slim
 
-# Copy your website files to the default Nginx folder
-COPY . /usr/share/nginx/html
+# Set the working directory inside the container
+WORKDIR /app
 
-# Expose port 80
-EXPOSE 80
+# Copy requirements file first (for caching optimization)
+COPY requirements.txt .
 
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all source code into the container
+COPY . .
+
+# Expose the application port
+EXPOSE 5000
+
+# Command to run the application
+CMD ["python", "app.py"]

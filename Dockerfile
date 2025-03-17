@@ -1,19 +1,8 @@
-# Base Image
-FROM python:3.10
-
-# Set the working directory
-WORKDIR /app
-
-# Copy project files
+FROM maven:3-eclipse-temurin-17 AS build
 COPY . .
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Expose port for Flask
-EXPOSE 5000
-
-# Run the application using Gunicorn for production
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
-
+RUN mvn clean package -Dmaven.test.skip=true
+FROM eclipse-temurin:17-alpine
+COPY --from=build /target/QuickMaster-1.0.0.jar demo.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "demo.jar"]
 

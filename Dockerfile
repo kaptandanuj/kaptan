@@ -16,10 +16,6 @@ EXPOSE 5000
 # Run the application using Gunicorn for production
 CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
 
-gunicorn
-from flask import Flask
-
-app = Flask(__name__)
 
 @app.route('/')
 def home():
